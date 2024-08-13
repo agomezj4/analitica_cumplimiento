@@ -11,3 +11,6 @@ data_raw_path: s3://analitica-cumplimiento--use1-az4--x-s3/data/01_raw/data_raw.
 # Data intermediate path
 data_intermediate_path: s3://analitica-cumplimiento--use1-az4--x-s3/data/02_intermediate/data_intermediate.parquet
 
+# Data primary path
+data_primary_path: s3://analitica-cumplimiento--use1-az4--x-s3/data/03_primary/data_primary.parquet
+

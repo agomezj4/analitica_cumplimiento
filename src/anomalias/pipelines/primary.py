@@ -1,3 +1,0 @@
-"""
-Lógica del pipeline primary
-"""

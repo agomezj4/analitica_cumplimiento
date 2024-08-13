@@ -1,6 +1,6 @@
 import sys
-from src.anomalias.utils import Utils
-from src.anomalias.orchestration import PipelineOrchestration
+from src.analitica_cumplimiento.utils import Utils
+from src.analitica_cumplimiento.orchestration import PipelineOrchestration
 
 Utils.add_src_to_path()
 
@@ -11,12 +11,16 @@ def main():
         if pipeline == 'All Pipelines':
             PipelineOrchestration.run_pipeline_raw()
             PipelineOrchestration.run_pipeline_intermediate()
+            PipelineOrchestration.run_pipeline_primary()
 
         elif pipeline == 'Pipeline Raw':
             PipelineOrchestration.run_pipeline_raw()
 
         elif pipeline == 'Pipeline Intermediate':
             PipelineOrchestration.run_pipeline_intermediate()
+
+        elif pipeline == 'Pipeline Primary':
+            PipelineOrchestration.run_pipeline_primary()
 
         else:
             print(f"Pipeline '{pipeline}' no reconocido.")

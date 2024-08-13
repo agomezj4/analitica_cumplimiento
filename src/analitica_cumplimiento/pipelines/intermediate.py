@@ -7,7 +7,7 @@ from typing import Any, Dict
 import pandas as pd
 import re
 
-from src.anomalias.utils import Utils
+from src.analitica_cumplimiento.utils import Utils
 logger = Utils.setup_logging()
 
 

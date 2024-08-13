@@ -56,3 +56,28 @@ class PipelineOrchestration:
         Utils.save_parquet_to_s3(data_intermediate_pd, parameters['parameters_catalog']['data_intermediate_path'])
 
         logger.info('Fin Pipeline Intermediate')
+
+    
+    # 3. Pipeline Primary
+    @staticmethod
+    def run_pipeline_primary():
+        logger.info('Inicio Pipeline Primary\n')
+
+        from .pipelines.primary import PipelinePrimary
+
+        # 3.1 Carga de datos intermediate
+        data_intermediate_pd = Utils.load_parquet_from_s3(parameters['parameters_catalog']['data_intermediate_path'])
+
+        # 3.2 Recategorización de datos
+        data_recategorize = PipelinePrimary.recategorize_data_pd(data_intermediate_pd, parameters['parameters_primary'])
+
+        # 3.3 Recategorización de países
+        data_country_rec = PipelinePrimary.recategorize_countrys_pd(data_recategorize, parameters['parameters_primary'])
+
+        # 3.4 Imputación de valores faltantes
+        data_primary_pd = PipelinePrimary.impute_missing_values_pd(data_country_rec, parameters['parameters_primary'])
+
+        # 3.3 Guardar datos primary en formato parquet en s3
+        Utils.save_parquet_to_s3(data_primary_pd, parameters['parameters_catalog']['data_primary_path'])
+
+        logger.info('Fin Pipeline Primary')
