@@ -25,10 +25,11 @@ class PipelineOrchestration:
         data_trx_pd = PipelineRaw.load_data_trx_pd(parameters['parameters_catalog']['data_trx_input_path'])
 
         # 1.2 Join de datos input
-        data_raw_pd = PipelineRaw.merge_dataframes_pd(data_clientes_pd, data_productos_pd, data_trx_pd, parameters['parameters_raw'])
+        data_customers_raw_pd, data_trx_raw_pd = PipelineRaw.merge_dataframes_pd(data_clientes_pd, data_productos_pd, data_trx_pd, parameters['parameters_raw'])
 
         # 1.3 Guardar datos raw en formato parquet en s3
-        Utils.save_parquet_to_s3(data_raw_pd, parameters['parameters_catalog']['data_raw_path'])
+        Utils.save_parquet_to_s3(data_customers_raw_pd, parameters['parameters_catalog']['data_customers_raw_path'])
+        Utils.save_parquet_to_s3(data_trx_raw_pd, parameters['parameters_catalog']['data_trx_raw_path'])
         
         logger.info('Fin Pipeline Raw')
 
@@ -41,19 +42,21 @@ class PipelineOrchestration:
         from .pipelines.intermediate import PipelineIntermediate
 
         # 2.1 Carga de datos raw
-        data_raw_pd = Utils.load_parquet_from_s3(parameters['parameters_catalog']['data_raw_path'])
+        data_customers_raw_pd = Utils.load_parquet_from_s3(parameters['parameters_catalog']['data_customers_raw_path'])
+        data_trx_raw_pd = Utils.load_parquet_from_s3(parameters['parameters_catalog']['data_trx_raw_path'])
 
         # 2.2 Cambio de tipos de datos
-        data_change_type = PipelineIntermediate.change_data_type_pd(data_raw_pd, parameters['parameters_intermediate'])
+        data_customers_change_type,  data_trx_change_type = PipelineIntermediate.change_data_type_pd(data_customers_raw_pd, data_trx_raw_pd, parameters['parameters_intermediate'])
 
         # 2.3 Cambio de nombres de columnas
-        data_change_name = PipelineIntermediate.change_data_name_pd(data_change_type, parameters['parameters_intermediate'])
+        data_customers_intermediate_pd = PipelineIntermediate.change_data_name_pd(data_customers_change_type, parameters['parameters_intermediate'])
 
         #2.4 Estandarización de columnas string
-        data_intermediate_pd = PipelineIntermediate.standarize_data_str_pd(data_change_name, parameters['parameters_intermediate'])
+        data_trx_intermediate_pd = PipelineIntermediate.standarize_data_str_pd(data_trx_change_type, parameters['parameters_intermediate'])
 
         # 2.5 Guardar datos intermediate en formato parquet en s3
-        Utils.save_parquet_to_s3(data_intermediate_pd, parameters['parameters_catalog']['data_intermediate_path'])
+        Utils.save_parquet_to_s3(data_customers_intermediate_pd, parameters['parameters_catalog']['data_customers_intermediate_path'])
+        Utils.save_parquet_to_s3(data_trx_intermediate_pd, parameters['parameters_catalog']['data_trx_intermediate_path'])
 
         logger.info('Fin Pipeline Intermediate')
 
@@ -66,18 +69,20 @@ class PipelineOrchestration:
         from .pipelines.primary import PipelinePrimary
 
         # 3.1 Carga de datos intermediate
-        data_intermediate_pd = Utils.load_parquet_from_s3(parameters['parameters_catalog']['data_intermediate_path'])
+        data_customers_intermediate_pd = Utils.load_parquet_from_s3(parameters['parameters_catalog']['data_customers_intermediate_path'])
+        data_trx_intermediate_pd = Utils.load_parquet_from_s3(parameters['parameters_catalog']['data_trx_intermediate_path'])
 
-        # 3.2 Recategorización de datos
-        data_recategorize = PipelinePrimary.recategorize_data_pd(data_intermediate_pd, parameters['parameters_primary'])
+        # 3.2 Recategorización de valores de campos
+        data_customers_primary_pd = PipelinePrimary.recategorize_data_pd(data_customers_intermediate_pd, parameters['parameters_primary'])
 
         # 3.3 Recategorización de países
-        data_country_rec = PipelinePrimary.recategorize_countrys_pd(data_recategorize, parameters['parameters_primary'])
+        data_customers_country, data_trx_primary_pd = PipelinePrimary.recategorize_countrys_pd(data_customers_primary_pd, data_trx_intermediate_pd, parameters['parameters_primary'])
 
-        # 3.4 Imputación de valores faltantes
-        data_primary_pd = PipelinePrimary.impute_missing_values_pd(data_country_rec, parameters['parameters_primary'])
+        # 3.4 Impuntación de valores faltantes
+        data_customers_primary_pd = PipelinePrimary.impute_missing_values_pd(data_customers_country, parameters['parameters_primary'])
 
-        # 3.3 Guardar datos primary en formato parquet en s3
-        Utils.save_parquet_to_s3(data_primary_pd, parameters['parameters_catalog']['data_primary_path'])
+        # 3.5 Guardar datos primary en formato parquet en s3
+        Utils.save_parquet_to_s3(data_customers_primary_pd, parameters['parameters_catalog']['data_customers_primary_path'])
+        Utils.save_parquet_to_s3(data_trx_primary_pd, parameters['parameters_catalog']['data_trx_primary_path'])
 
         logger.info('Fin Pipeline Primary')

@@ -1,20 +1,19 @@
 ## Intermediate parameters
 
-# change_data_type_pd
-date_columns: 
- - FECHA_ACTUALIZACION
- - FECHA_TRANSACCION
+# change_data_type_pd  #df1 es customers - df2 es trx
+df1: {
+    date_columns: ['FECHA_ACTUALIZACION'],
+    int_columns: ['PERFIL_WIRES_IN_FRECUENCIA', 'PERFIL_WIRES_OUT_FRECUENCIA'],
+    float_columns: ['PERFIL_WIRES_IN_MONTO', 'PERFIL_WIRES_OUT_MONTO']
+}
 
-int_columns:
- - PERFIL_WIRES_IN_FRECUENCIA
- - PERFIL_WIRES_OUT_FRECUENCIA
+df2: {
+    date_columns: ['FECHA_TRANSACCION'],
+    float_columns: ['MONTO']
+}
 
-float_columns:
- - PERFIL_WIRES_IN_MONTO
- - PERFIL_WIRES_OUT_MONTO
- - MONTO
 
-# change_data_name_pd
+# change_data_name_pd  #customers
 columns_name: {
     PERFIL_WIRES_IN_MONTO: MONTO_TRX_RECIBIDA,
     PERFIL_WIRES_IN_FRECUENCIA: FRECUENCIA_TRX_RECIBIDA,
@@ -23,7 +22,7 @@ columns_name: {
 }
 
 
- # standarize_data_str_pd
+ # standarize_data_str_pd  # trx
 columns_to_standarize:
  - TIPO_TRANSACCION
  - PAIS_ORIGEN_TRANSACCION

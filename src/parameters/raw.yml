@@ -1,5 +1,4 @@
 ## Raw parameters
 
-# parámeteos merge_dataframes_pd
+# parámeteos merge_dataframes_pd  # customers
 codigo_join_clientes_prod: CODIGO
-codigo_join_prod_trx: CUENTA

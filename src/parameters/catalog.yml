@@ -6,11 +6,14 @@ data_producto_input_path: s3://analitica-cumplimiento--use1-az4--x-s3/data/00_in
 data_trx_input_path: s3://analitica-cumplimiento--use1-az4--x-s3/data/00_input/TRANSACCIONES.csv
 
 # Data raw path
-data_raw_path: s3://analitica-cumplimiento--use1-az4--x-s3/data/01_raw/data_raw.parquet
+data_customers_raw_path: s3://analitica-cumplimiento--use1-az4--x-s3/data/01_raw/data_customers_raw.parquet
+data_trx_raw_path: s3://analitica-cumplimiento--use1-az4--x-s3/data/01_raw/data_trx_raw.parquet
 
 # Data intermediate path
-data_intermediate_path: s3://analitica-cumplimiento--use1-az4--x-s3/data/02_intermediate/data_intermediate.parquet
+data_customers_intermediate_path: s3://analitica-cumplimiento--use1-az4--x-s3/data/02_intermediate/data_customers_intermediate.parquet
+data_trx_intermediate_path: s3://analitica-cumplimiento--use1-az4--x-s3/data/02_intermediate/data_trx_intermediate.parquet
 
 # Data primary path
-data_primary_path: s3://analitica-cumplimiento--use1-az4--x-s3/data/03_primary/data_primary.parquet
+data_customers_primary_path: s3://analitica-cumplimiento--use1-az4--x-s3/data/03_primary/data_customers_primary.parquet
+data_trx_primary_path: s3://analitica-cumplimiento--use1-az4--x-s3/data/03_primary/data_trx_primary.parquet
 

@@ -2,7 +2,7 @@
 Lógica del pipeline raw
 """
 
-from typing import Any, Dict
+from typing import Any, Dict, Tuple
 
 import pandas as pd
 import re
@@ -97,6 +97,7 @@ class PipelineRaw:
 
         return Utils.process_lines_to_df(lines, pattern, header, default_values)
     
+    
     # 3. Join de datos: primero se une clientes con productos y luego se unen con transacciones
     @staticmethod
     def merge_dataframes_pd(
@@ -104,7 +105,7 @@ class PipelineRaw:
         df_productos: pd.DataFrame, 
         df_trx: pd.DataFrame, 
         params: Dict[str, Any]
-    ) -> pd.DataFrame:
+    ) -> Tuple[pd.DataFrame, pd.DataFrame]:
         """
         Realiza la unión de tres DataFrames utilizando claves especificadas en el diccionario de parámetros.
         
@@ -121,8 +122,9 @@ class PipelineRaw:
 
         Returns
         -------
-        pd.DataFrame
-            DataFrame resultante después de realizar los joins.
+        Tuple[pd.DataFrame, pd.DataFrame]
+            Tupla con dos DataFrames de pandas: el primero es el resultado del join entre df_clientes y df_productos,
+            y el segundo es el DataFrame de transacciones con las columnas limpias.
         """
         # Registra el inicio del proceso de join
         logger.info("Iniciando el proceso de unión de DataFrames...")
@@ -145,18 +147,8 @@ class PipelineRaw:
         df_trx[codigo_join_prod_trx] = df_trx[codigo_join_prod_trx].str.replace("'", "")
         logger.info("Limpieza de valores en la columna 'cuenta' de df_trx completada.")
 
-        # Realiza el segundo join entre df_merged y df_trx
-        df_final = pd.merge(
-            df_merged, 
-            df_trx, 
-            how='left', 
-            left_on=codigo_join_prod_trx, 
-            right_on=codigo_join_prod_trx
-        )
-        logger.info("Join entre df_merged y df_trx completado.")
-
         # Registra el número de registros en el DataFrame final
-        final_records = len(df_final)
+        final_records = len(df_merged)
         logger.info(f"El proceso de unión ha generado un DataFrame con {final_records} registros.\n")
 
-        return df_final
+        return df_merged, df_trx

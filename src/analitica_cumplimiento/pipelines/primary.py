@@ -2,7 +2,7 @@
 Lógica del pipeline primary
 """
 
-from typing import Any, Dict
+from typing import Any, Dict, Tuple
 
 import pandas as pd
 import pycountry
@@ -57,62 +57,73 @@ class PipelinePrimary:
         # Retorna el DataFrame con los campos recategorizados
         return df
     
+
     # 2. recategorize_countrys_pd
     @staticmethod
     def recategorize_countrys_pd(
-        df: pd.DataFrame,
+        df1: pd.DataFrame,
+        df2: pd.DataFrame,
         params: Dict[str, Any],
-    ) -> pd.DataFrame:
+    ) -> Tuple[pd.DataFrame, pd.DataFrame]:
         """
-        Recategoriza los valores de las columnas que contienen códigos de países en formato ISO 3166-1 alfa-2
-        o códigos numéricos ISO 3166-1 a sus correspondientes códigos numéricos ISO 3166-1.
-        Los valores nulos o no reconocidos se asignan a -1.
+        Recategoriza los valores de las columnas que contienen códigos numéricos ISO 3166-1 o valores de nombre de país
+        a sus correspondientes códigos ISO 3166-1 alfa-2. Los valores nulos o no reconocidos se asignan a 'SIN INFO'.
 
         Parameters
         ----------
-        df : pd.DataFrame
-            DataFrame que contiene las columnas con códigos de países en formato ISO 3166-1 alfa-2 o numéricos.
-        params: Dict[str, Any] 
-            Diccionario de parámetros primary. 
+        df1 : pd.DataFrame
+            Primer DataFrame que contiene las columnas con códigos numéricos ISO 3166-1 o valores de nombre de país.
+        df2 : pd.DataFrame
+            Segundo DataFrame que contiene las columnas con códigos numéricos ISO 3166-1 o valores de nombre de país.
+        params: Dict[str, Any]
+            Diccionario de parámetros primary.
 
         Returns
         -------
-        pd.DataFrame
-            DataFrame con las recategorizaciones realizadas.
+        Tuple[pd.DataFrame, pd.DataFrame]
+            Tupla de DataFrames con las recategorizaciones realizadas.
         """
+        # Contadores para los loggers
+        null_count = 0
+        country_mapping = {}
 
-        # Registra un mensaje de información indicando el inicio del proceso de recategorización de países
-        logger.info("Iniciando el proceso de recategorización de países...")
+        # Función para mapear los códigos de país
+        def map_country_code(x):
+            nonlocal null_count
+            if pd.isna(x) or x in ['None', 'NaN', '']:
+                null_count += 1
+                return 'SIN INFO'
+            elif x.isdigit():
+                country = pycountry.countries.get(numeric=x.zfill(3))
+            else:
+                country = pycountry.countries.get(alpha_2=x) or pycountry.countries.get(name=x)
+            
+            if country:
+                country_code = country.alpha_2
+                country_mapping[x] = country_code
+                return country_code
+            else:
+                null_count += 1
+                return 'SIN INFO'
 
-        # Extrae las columnas de países especificadas en los parámetros
-        country_columns = params['countrys_cols']
+        # Procesar el primer DataFrame
+        for col in params['df1']['countrys_cols']:
+            if col in df1.columns:
+                df1[col] = df1[col].apply(map_country_code)
 
-        # Mapeo personalizado para códigos específicos como AN, UK, DI, etc.
-        custom_mapping = params['custom_country_mapping']
+        # Procesar el segundo DataFrame
+        for col in params['df2']['countrys_cols']:
+            if col in df2.columns:
+                df2[col] = df2[col].apply(map_country_code)
 
-        # Recorre cada columna especificada en los parámetros
-        for col in country_columns:
-            if col in df.columns:
-                def map_country_code(x):
-                    if pd.isna(x):
-                        return -1
-                    elif x.isdigit() and len(x) in [2, 3]:  # Para códigos numéricos que ya son ISO
-                        return int(x)
-                    elif x in custom_mapping:  # Verifica si el código está en el mapeo personalizado
-                        return custom_mapping[x]
-                    else:
-                        country = pycountry.countries.get(alpha_2=x)
-                        return int(country.numeric) if country else -1
-                
-                # Aplica la función de mapeo a cada valor en la columna
-                df[col] = df[col].apply(map_country_code)
-                logger.info(f"Recategorizada la columna '{col}' a códigos numéricos ISO 3166-1.")
-        
-        # Registra un mensaje de información indicando el fin del proceso de recategorización de países
-        logger.info("Finalizado el proceso de recategorización de países.")
+        # Log final de información
+        logger.info(f"Total de valores asignados a 'SIN INFO': {null_count}")
+        logger.info("Mapeo de valores originales a nombres de países (códigos ISO 3166-1 alfa-2):")
+        for original_value, mapped_value in country_mapping.items():
+            logger.info(f"{original_value} -> {mapped_value}")
 
-        # Retorna el DataFrame con las recategorizaciones realizadas
-        return df
+        return df1, df2
+
 
     # 3. impute_missing_values_pd
     @staticmethod

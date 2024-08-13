@@ -1,6 +1,6 @@
 ## Primary parameters
 
-# recategorize_data_pd
+# recategorize_data_pd  #customers
 PEP: {
     NO: 1,
     MEDIO: 2,
@@ -15,18 +15,14 @@ RIESGO: {
     ALTO: 5
 }
 
-# recategorize_countrys_pd
-countrys_cols:
- - PAIS
- - PAIS_ORIGEN_TRANSACCION
- - PAIS_DESTINO_TRANSACCION
-
-# custom_country_mapping
-custom_country_mapping: {
-    AN: 530,  # Código ISO 3166-1 numérico para Antillas Neerlandesas
-    UK: 826,  # Código ISO 3166-1 numérico para Reino Unido
-    DI: 999   # Código personalizado que desees para DI
+# recategorize_countrys_pd  #df1 es customers - df2 es trx
+df1: {
+    countrys_cols: ['PAIS']
 }
 
-# impute_missing_values_pd
+df2: {
+    countrys_cols: ['PAIS_ORIGEN_TRANSACCION', 'PAIS_DESTINO_TRANSACCION']
+}
+
+# impute_missing_values_pd  #customers
 missing_cols: FECHA_ACTUALIZACION
