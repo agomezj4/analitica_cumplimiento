@@ -1,0 +1,3 @@
+"""
+Lógica del pipeline primary
+"""

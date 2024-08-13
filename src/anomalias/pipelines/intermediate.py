@@ -1,0 +1,4 @@
+"""
+Lógica del pipeline intermediate
+"""
+
