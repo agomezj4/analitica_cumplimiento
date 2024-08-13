@@ -17,3 +17,6 @@ data_trx_intermediate_path: s3://analitica-cumplimiento--use1-az4--x-s3/data/02_
 data_customers_primary_path: s3://analitica-cumplimiento--use1-az4--x-s3/data/03_primary/data_customers_primary.parquet
 data_trx_primary_path: s3://analitica-cumplimiento--use1-az4--x-s3/data/03_primary/data_trx_primary.parquet
 
+# Data feature path
+data_customers_feature_path: s3://analitica-cumplimiento--use1-az4--x-s3/data/04_feature/data_customers_feature.parquet
+data_trx_feature_path: s3://analitica-cumplimiento--use1-az4--x-s3/data/04_feature/data_trx_feature.parquet

@@ -86,3 +86,24 @@ class PipelineOrchestration:
         Utils.save_parquet_to_s3(data_trx_primary_pd, parameters['parameters_catalog']['data_trx_primary_path'])
 
         logger.info('Fin Pipeline Primary')
+
+    
+    # 4. Pipeline Feature Engineering
+    @staticmethod
+    def run_pipeline_feature_engineering():
+        logger.info('Inicio Pipeline Feature Engineering\n')
+
+        from .pipelines.feature import PipelineFeature
+
+        # 4.1 Carga de datos primary
+        data_customers_primary_pd = Utils.load_parquet_from_s3(parameters['parameters_catalog']['data_customers_primary_path'])
+        data_trx_primary_pd = Utils.load_parquet_from_s3(parameters['parameters_catalog']['data_trx_primary_path'])
+
+        #4.2 Creación de nuevas características
+        data_customers_feature_pd, data_trx_feature_pd = PipelineFeature.create_features_pd(data_customers_primary_pd, data_trx_primary_pd, parameters['parameters_feature'])
+
+        # 4.3 Guardar datos feature en formato parquet en s3
+        Utils.save_parquet_to_s3(data_customers_feature_pd, parameters['parameters_catalog']['data_customers_feature_path'])
+        Utils.save_parquet_to_s3(data_trx_feature_pd, parameters['parameters_catalog']['data_trx_feature_path'])
+
+        logger.info('Fin Pipeline Feature Engineering')
