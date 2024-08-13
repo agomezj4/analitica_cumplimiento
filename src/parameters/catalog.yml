@@ -1,10 +1,13 @@
 ## Data paths parameters
 
 # Data input paths
-data_clientes_raw_path: s3://analitica-cumplimiento--use1-az4--x-s3/data/00_input/CLIENTES.csv
-data_producto_raw_path: s3://analitica-cumplimiento--use1-az4--x-s3/data/00_input/PRODUCTO.csv
-data_trx_raw_path: s3://analitica-cumplimiento--use1-az4--x-s3/data/00_input/TRANSACCIONES.csv
+data_clientes_input_path: s3://analitica-cumplimiento--use1-az4--x-s3/data/00_input/CLIENTES.csv
+data_producto_input_path: s3://analitica-cumplimiento--use1-az4--x-s3/data/00_input/PRODUCTO.csv
+data_trx_input_path: s3://analitica-cumplimiento--use1-az4--x-s3/data/00_input/TRANSACCIONES.csv
 
 # Data raw path
 data_raw_path: s3://analitica-cumplimiento--use1-az4--x-s3/data/01_raw/data_raw.parquet
+
+# Data intermediate path
+data_intermediate_path: s3://analitica-cumplimiento--use1-az4--x-s3/data/02_intermediate/data_intermediate.parquet
 
