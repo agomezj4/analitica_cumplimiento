@@ -193,6 +193,7 @@ class PipelineSeriesTiempo:
         logger.info("Filtrado y preparación de datos completados.")
         return df_cuenta
 
+
     # 7. Plotting de descomposición
     @staticmethod
     def plot_decomposition(result: Any) -> plt.Figure:
@@ -210,15 +211,22 @@ class PipelineSeriesTiempo:
         """
         logger.info("Iniciando la descomposición de la serie temporal...")
         fig, ((ax1, ax2), (ax3, ax4)) = plt.subplots(2, 2, figsize=(16, 12))
+        
+        # Convertir los datos a arrays unidimensionales
+        observed_array = np.array(result.observed).flatten()
+        trend_array = np.array(result.trend).flatten()
+        seasonal_array = np.array(result.seasonal).flatten()
+        resid_array = np.array(result.resid).flatten()
+
         components = [
-            ('Observed', result.observed, ax1, '#2C3E50'),
-            ('Trend', result.trend, ax2, '#27AE60'),
-            ('Seasonal', result.seasonal, ax3, '#E67E22'),
-            ('Residual', result.resid, ax4, '#95A5A6')
+            ('Observed', observed_array, ax1, '#2C3E50'),
+            ('Trend', trend_array, ax2, '#27AE60'),
+            ('Seasonal', seasonal_array, ax3, '#E67E22'),
+            ('Residual', resid_array, ax4, '#95A5A6')
         ]
 
         for title, data, ax, color in components:
-            ax.plot(data, color=color)
+            ax.plot(result.observed.index, data, color=color)
             ax.set_title(title, fontsize=14, fontweight='bold')
             PipelineSeriesTiempo.style_axis(ax)
 
@@ -250,22 +258,30 @@ class PipelineSeriesTiempo:
         # Convertir el índice a un array de NumPy para evitar problemas de indexación multidimensional
         index_array = np.array(result.seasonal.index)
         
-        # Usar el array de índices en lugar del índice directamente
-        ax.plot(index_array, result.seasonal, color='#E67E22')
-        ax.fill_between(index_array, result.seasonal, alpha=0.3, color='#E67E22')
+        # Asegurarse de que los datos sean un array unidimensional
+        seasonal_array = np.array(result.seasonal).flatten()
+        
+        # Usar los arrays en lugar de las series directamente
+        ax.plot(index_array, seasonal_array, color='#E67E22')
+        ax.fill_between(index_array, seasonal_array, alpha=0.3, color='#E67E22')
         ax.axhline(y=0, color='#7F8C8D', linestyle='--')
         ax.set_title('Componente Estacional de la Diferencia de Transacciones para "CUENTA"', fontsize=14, fontweight='bold')
         ax.set_xlabel('Fecha', fontsize=12)
         ax.set_ylabel('Diferencia de Transacciones (Estacionalidad)', fontsize=12)
         PipelineSeriesTiempo.style_axis(ax)
 
-        peak = result.seasonal.idxmax()
-        trough = result.seasonal.idxmin()
-        ax.annotate(f'Pico: {peak.strftime("%b")}', xy=(peak, result.seasonal[peak]), xytext=(10, 10), 
+        peak = np.argmax(seasonal_array)
+        trough = np.argmin(seasonal_array)
+        
+        # Convertir numpy.datetime64 a datetime
+        peak_date = pd.to_datetime(index_array[peak]).strftime("%b")
+        trough_date = pd.to_datetime(index_array[trough]).strftime("%b")
+
+        ax.annotate(f'Pico: {peak_date}', xy=(index_array[peak], seasonal_array[peak]), xytext=(10, 10), 
                     textcoords='offset points', ha='left', va='bottom', fontsize=10,
                     bbox=dict(boxstyle='round,pad=0.5', fc='yellow', alpha=0.5),
                     arrowprops=dict(arrowstyle = '->', connectionstyle='arc3,rad=0'))
-        ax.annotate(f'Valle: {trough.strftime("%b")}', xy=(trough, result.seasonal[trough]), xytext=(10, -10), 
+        ax.annotate(f'Valle: {trough_date}', xy=(index_array[trough], seasonal_array[trough]), xytext=(10, -10), 
                     textcoords='offset points', ha='left', va='top', fontsize=10,
                     bbox=dict(boxstyle='round,pad=0.5', fc='yellow', alpha=0.5),
                     arrowprops=dict(arrowstyle = '->', connectionstyle='arc3,rad=0'))
@@ -303,9 +319,16 @@ class PipelineSeriesTiempo:
 
         plt.figure(figsize=(14, 7))
         ax = plt.gca()
-        ax.plot(df_cuenta.index, df_cuenta['DIFERENCIA_TRX'], label='Datos Históricos', color='#2980B9')
-        ax.plot(prediction_dates, predictions, label='Pronóstico hasta 2034', linestyle='--', color='#2ECC71')
-        ax.fill_between(prediction_dates, ci_lower, ci_upper, color='#2ECC71', alpha=0.2)
+        
+        # Asegurarse de que los datos sean arrays unidimensionales
+        diferencias_trx_array = np.array(df_cuenta['DIFERENCIA_TRX']).flatten()
+        predictions_array = np.array(predictions).flatten()
+        ci_lower_array = np.array(ci_lower).flatten()
+        ci_upper_array = np.array(ci_upper).flatten()
+
+        ax.plot(df_cuenta.index, diferencias_trx_array, label='Datos Históricos', color='#2980B9')
+        ax.plot(prediction_dates, predictions_array, label='Pronóstico hasta 2034', linestyle='--', color='#2ECC71')
+        ax.fill_between(prediction_dates, ci_lower_array, ci_upper_array, color='#2ECC71', alpha=0.2)
         ax.axvline(x=df_cuenta.index[-1], color='red', linestyle=':', label='Inicio del Pronóstico')
 
         ax.set_title('Pronóstico de la Diferencia de Transacciones hasta 2034 para "CUENTA"', fontsize=14, fontweight='bold')
