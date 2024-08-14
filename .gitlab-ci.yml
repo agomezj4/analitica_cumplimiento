@@ -127,25 +127,25 @@ time_series_pipeline:
 
 
 ## Ejecución de los stages de CD
-deploy_staging:
+deploy_staging_pipeline:
   image: continuumio/miniconda3  # Usar una imagen que soporte conda
   stage: deploy_staging
   script:
     - echo "Deploying to staging environment"
     - conda env create -f environment.yml
-    - conda activate analitica_cumplimiento  
-    - ./deploy.sh staging
+    - echo "source activate analitica_cumplimiento" >> ~/.bashrc
+    - /bin/bash -c "source ~/.bashrc && conda activate analitica_cumplimiento && ./deploy.sh staging"
   rules:
     - if: '$CI_PIPELINE_TARGET == "deploy_staging"'
 
-deploy_production:
+deploy_production_pipeline:
   image: continuumio/miniconda3  # Usar una imagen que soporte conda
   stage: deploy_production
   script:
     - echo "Deploying to production environment"
     - conda env create -f environment.yml
-    - conda activate analitica_cumplimiento 
-    - ./deploy.sh production
+    - echo "source activate analitica_cumplimiento" >> ~/.bashrc
+    - /bin/bash -c "source ~/.bashrc && conda activate analitica_cumplimiento && ./deploy.sh production"
   rules:
     - if: '$CI_PIPELINE_TARGET == "deploy_production"'
 
