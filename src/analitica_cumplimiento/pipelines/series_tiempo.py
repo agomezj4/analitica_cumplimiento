@@ -246,8 +246,13 @@ class PipelineSeriesTiempo:
         logger.info("Visualizando el componente estacional de la serie temporal...")
         plt.figure(figsize=(12, 6))
         ax = plt.gca()
-        ax.plot(result.seasonal.index, result.seasonal, color='#E67E22')
-        ax.fill_between(result.seasonal.index, result.seasonal, alpha=0.3, color='#E67E22')
+        
+        # Convertir el índice a un array de NumPy para evitar problemas de indexación multidimensional
+        index_array = np.array(result.seasonal.index)
+        
+        # Usar el array de índices en lugar del índice directamente
+        ax.plot(index_array, result.seasonal, color='#E67E22')
+        ax.fill_between(index_array, result.seasonal, alpha=0.3, color='#E67E22')
         ax.axhline(y=0, color='#7F8C8D', linestyle='--')
         ax.set_title('Componente Estacional de la Diferencia de Transacciones para "CUENTA"', fontsize=14, fontweight='bold')
         ax.set_xlabel('Fecha', fontsize=12)
