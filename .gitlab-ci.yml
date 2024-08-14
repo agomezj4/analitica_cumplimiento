@@ -55,6 +55,8 @@ raw_pipeline:
     - . analitica_cumplimiento/bin/activate
     - analitica_cumplimiento/bin/python3 __main__.py 'Pipeline Raw'
     - echo "FIN PIPELINE RAW"
+  rules:
+    - if: '$CI_PIPELINE_TARGET == "raw"'
 
 intermediate_pipeline:
   image: python:3.10.0
@@ -66,6 +68,8 @@ intermediate_pipeline:
     - . analitica_cumplimiento/bin/activate
     - analitica_cumplimiento/bin/python3 __main__.py 'Pipeline Intermediate'
     - echo "FIN PIPELINE INTERMEDIATE"
+  rules:
+    - if: '$CI_PIPELINE_TARGET == "intermediate"'
 
 primary_pipeline:
   image: python:3.10.0
@@ -77,6 +81,8 @@ primary_pipeline:
     - . analitica_cumplimiento/bin/activate
     - analitica_cumplimiento/bin/python3 __main__.py 'Pipeline Primary'
     - echo "FIN PIPELINE PRIMARY"
+  rules:
+    - if: '$CI_PIPELINE_TARGET == "primary"'
 
 feature_engineering_pipeline:
   image: python:3.10.0
@@ -88,6 +94,8 @@ feature_engineering_pipeline:
     - . analitica_cumplimiento/bin/activate
     - analitica_cumplimiento/bin/python3 __main__.py 'Pipeline Feature Engineering'
     - echo "FIN PIPELINE FEATURE"
+  rules:
+    - if: '$CI_PIPELINE_TARGET == "feature_engineering"'
 
 anomaly_detection_pipeline:
   image: python:3.10.0
@@ -99,6 +107,8 @@ anomaly_detection_pipeline:
     - . analitica_cumplimiento/bin/activate
     - analitica_cumplimiento/bin/python3 __main__.py 'Pipeline Anomaly Detection'
     - echo "FIN PIPELINE ANOMALIAS"
+  rules:
+    - if: '$CI_PIPELINE_TARGET == "anomaly_detection"'
 
 time_series_pipeline:
   image: python:3.10.0
@@ -110,3 +120,5 @@ time_series_pipeline:
     - . analitica_cumplimiento/bin/activate
     - analitica_cumplimiento/bin/python3 __main__.py 'Pipeline Time Series'
     - echo "FIN PIPELINE SERIES DE TIEMPO"
+  rules:
+    - if: '$CI_PIPELINE_TARGET == "time_series"'

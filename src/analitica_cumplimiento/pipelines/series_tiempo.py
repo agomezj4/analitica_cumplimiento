@@ -212,7 +212,8 @@ class PipelineSeriesTiempo:
         logger.info("Iniciando la descomposición de la serie temporal...")
         fig, ((ax1, ax2), (ax3, ax4)) = plt.subplots(2, 2, figsize=(16, 12))
         
-        # Convertir los datos a arrays unidimensionales
+        # Convertir los índices y datos a arrays unidimensionales
+        index_array = np.array(result.observed.index)
         observed_array = np.array(result.observed).flatten()
         trend_array = np.array(result.trend).flatten()
         seasonal_array = np.array(result.seasonal).flatten()
@@ -226,7 +227,7 @@ class PipelineSeriesTiempo:
         ]
 
         for title, data, ax, color in components:
-            ax.plot(result.observed.index, data, color=color)
+            ax.plot(index_array, data, color=color)
             ax.set_title(title, fontsize=14, fontweight='bold')
             PipelineSeriesTiempo.style_axis(ax)
 
