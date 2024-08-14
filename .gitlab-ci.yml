@@ -1,4 +1,4 @@
-### Definición de las etapas del pipelines de CI/CD
+#### Definición de las etapas del pipelines de CI/CD
 
 stages:
   - raw
