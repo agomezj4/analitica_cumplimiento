@@ -83,6 +83,23 @@ class Utils:
         return parameters
 
     @staticmethod
+    def load_csv_pd(file_path: str, encoding: str = 'utf-8') -> pd.DataFrame:
+        """
+        Cargar datos desde un archivo CSV usando Pandas.
+        Parameters
+        ----------
+        file_path : str
+            Ruta del archivo CSV a cargar.
+        encoding : str, optional
+            Tipo de codificación del archivo CSV (por defecto 'utf-8').
+        Returns
+        -------
+        pd.DataFrame
+            DataFrame con los datos cargados.
+        """
+        return pd.read_csv(file_path, encoding=encoding)
+    
+    @staticmethod
     def load_data_raw_from_s3(filepath: str) -> Tuple:
         """
         Cargar datos desde un archivo en S3.
