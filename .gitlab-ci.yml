@@ -5,6 +5,8 @@ stages:
   - feature_engineering
   - anomaly_detection
   - time_series
+  - deploy_staging
+  - deploy_production
 
 # Configuración común para todos los stages
 .common_setup: &common_setup
@@ -44,7 +46,7 @@ stages:
   - pip install statsmodels==0.14.2
   - pip install scikit-learn==1.5.0
 
-## Ejecución de los stages
+## Ejecución de los stages de CI
 raw_pipeline:
   image: "python:3.10.0"
   stage: raw
@@ -122,3 +124,32 @@ time_series_pipeline:
     - echo "FIN PIPELINE SERIES DE TIEMPO"
   rules:
     - if: '$CI_PIPELINE_TARGET == "time_series"'
+
+
+## Ejecución de los stages de CD
+deploy_staging:
+  image: continuumio/miniconda3  # Usar una imagen que soporte conda
+  stage: deploy_staging
+  script:
+    - echo "Deploying to staging environment"
+    - conda env create -f environment.yml
+    - conda activate analitica_cumplimiento  
+    - ./deploy.sh staging
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "deploy_staging"'
+  only:
+    - main
+
+deploy_production:
+  image: continuumio/miniconda3  # Usar una imagen que soporte conda
+  stage: deploy_production
+  script:
+    - echo "Deploying to production environment"
+    - conda env create -f environment.yml
+    - conda activate analitica_cumplimiento 
+    - ./deploy.sh production
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "deploy_production"'
+  only:
+    - main
+
