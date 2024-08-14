@@ -137,8 +137,6 @@ deploy_staging:
     - ./deploy.sh staging
   rules:
     - if: '$CI_COMMIT_BRANCH == "deploy_staging"'
-  only:
-    - main
 
 deploy_production:
   image: continuumio/miniconda3  # Usar una imagen que soporte conda
@@ -150,6 +148,4 @@ deploy_production:
     - ./deploy.sh production
   rules:
     - if: '$CI_COMMIT_BRANCH == "deploy_production"'
-  only:
-    - main
 
