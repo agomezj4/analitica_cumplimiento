@@ -21,3 +21,4 @@ dependencies:
   - scipy=1.14.0
   - matplotlib=3.5.0
   - statsmodels=0.14.2
+  - pillow=10.4.0
