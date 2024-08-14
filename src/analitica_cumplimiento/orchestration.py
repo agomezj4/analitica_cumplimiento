@@ -134,7 +134,7 @@ class PipelineOrchestration:
 
         # 5.6 Guardar datos con anomalías en formato parquet en s3
         Utils.save_parquet_to_s3(transacciones_marcadas_pd, parameters['parameters_catalog']['data_info_anomaly_trx_path'])
-        Utils.save_parquet_to_s3(resumen_anomalias, parameters['parameters_catalog']['sumary3_anomaly_trx_path'])
+        Utils.save_parquet_to_s3(resumen_anomalias, parameters['parameters_catalog']['sumary_anomaly_trx_path'])
 
         logger.info('Fin Pipeline Detección de Anomalías')
 
