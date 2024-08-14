@@ -2,9 +2,9 @@ stages:
   - raw
   - intermediate
   - primary
-  - feature
-  - anomalias
-  - series_tiempo
+  - feature_engineering
+  - anomaly_detection
+  - time_series
 
 # Configuración común para todos los stages
 .common_setup: &common_setup
@@ -27,18 +27,18 @@ stages:
   - pip install pycountry==24.6.1
 
 # Instalación específica para el stage feature
-.feature_setup: &feature_setup
+.feature_engineering_setup: &feature_engineering_setup
   - *common_setup
   - pip install scikit-learn==1.5.0
 
 # Instalación específica para el stage anomalias
-.anomalias_setup: &anomalias_setup
+.anomaly_detection_setup: &anomaly_detection_setup
   - *common_setup
   - pip install scikit-learn==1.5.0
   - pip install scipy==1.14.0
 
 # Instalación específica para el stage series_tiempo
-.series_tiempo_setup: &series_tiempo_setup
+.time_series_setup: &time_series_setup
   - *common_setup
   - pip install numpy==1.26.0
   - pip install statsmodels==0.14.2
@@ -77,22 +77,22 @@ primary_pipeline:
     - analitica_cumplimiento/bin/python3 __main__.py 'Pipeline Primary'
     - echo "FIN PIPELINE PRIMARY"
 
-feature_pipeline:
+feature_engineering_pipeline:
   image: python:3.10.0
-  stage: feature
+  stage: feature_engineering
   before_script:
-    - *feature_setup
+    - *feature_engineering_setup
   script:
     - echo "INICIO PIPELINE FEATURE"
     - . analitica_cumplimiento/bin/activate
     - analitica_cumplimiento/bin/python3 __main__.py 'Pipeline Feature Engineering'
     - echo "FIN PIPELINE FEATURE"
 
-anomalies_pipeline:
+anomaly_detection_pipeline:
   image: python:3.10.0
-  stage: anomalias
+  stage: anomaly_detection
   before_script:
-    - *anomalias_setup
+    - *anomaly_detection_setup
   script:
     - echo "INICIO PIPELINE ANOMALIAS"
     - . analitica_cumplimiento/bin/activate
@@ -101,9 +101,9 @@ anomalies_pipeline:
 
 time_series_pipeline:
   image: python:3.10.0
-  stage: series_tiempo
+  stage: time_series
   before_script:
-    - *series_tiempo_setup
+    - *time_series_setup
   script:
     - echo "INICIO PIPELINE SERIES DE TIEMPO"
     - . analitica_cumplimiento/bin/activate
