@@ -8,7 +8,6 @@ import numpy as np
 from statsmodels.tsa.seasonal import seasonal_decompose
 from statsmodels.tsa.holtwinters import ExponentialSmoothing
 import matplotlib.pyplot as plt
-import seaborn as sns
 from matplotlib.dates import YearLocator, DateFormatter
 
 from src.analitica_cumplimiento.utils import Utils
