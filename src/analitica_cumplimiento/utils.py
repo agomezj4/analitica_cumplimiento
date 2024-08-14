@@ -3,10 +3,8 @@ from typing import Tuple, Dict
 import os
 import sys
 import yaml
-import pickle
 import logging
 import pandas as pd
-import polars as pl
 import boto3
 import re
 import pyarrow.parquet as pq
@@ -82,172 +80,6 @@ class Utils:
                 key_name = f'parameters_{yaml_file.replace(".yml", "")}'
                 parameters[key_name] = data
         return parameters
-
-    @staticmethod
-    def load_csv_pd(file_path: str, encoding: str = 'utf-8') -> pd.DataFrame:
-        """
-        Cargar datos desde un archivo CSV usando Pandas.
-
-        Parameters
-        ----------
-        file_path : str
-            Ruta del archivo CSV a cargar.
-        encoding : str, optional
-            Tipo de codificación del archivo CSV (por defecto 'utf-8').
-
-        Returns
-        -------
-        pd.DataFrame
-            DataFrame con los datos cargados.
-        """
-        return pd.read_csv(file_path, encoding=encoding)
-
-    @staticmethod
-    def load_csv_pl(file_path: str, encoding: str = 'utf-8') -> pl.DataFrame:
-        """
-        Cargar datos desde un archivo CSV usando Polars.
-
-        Parameters
-        ----------
-        file_path : str
-            Ruta del archivo CSV a cargar.
-        encoding : str, optional
-            Tipo de codificación del archivo CSV (por defecto 'utf-8').
-
-        Returns
-        -------
-        pl.DataFrame
-            DataFrame con los datos cargados.
-        """
-        return pl.read_csv(file_path, encoding=encoding)
-
-    @staticmethod
-    def load_parquet_pd(file_path: str) -> pd.DataFrame:
-        """
-        Cargar datos desde un archivo Parquet usando Pandas.
-
-        Parameters
-        ----------
-        file_path : str
-            Ruta del archivo Parquet a cargar.
-
-        Returns
-        -------
-        pd.DataFrame
-            DataFrame con los datos cargados.
-        """
-        return pd.read_parquet(file_path)
-
-    @staticmethod
-    def load_parquet_pl(file_path: str) -> pl.DataFrame:
-        """
-        Cargar datos desde un archivo Parquet usando Polars.
-
-        Parameters
-        ----------
-        file_path : str
-            Ruta del archivo Parquet a cargar.
-
-        Returns
-        -------
-        pl.DataFrame
-            DataFrame con los datos cargados.
-        """
-        return pl.read_parquet(file_path)
-
-    @staticmethod
-    def save_csv_pd(data: pd.DataFrame, path: str) -> None:
-        """
-        Guardar un DataFrame en un archivo CSV usando Pandas.
-
-        Parameters
-        ----------
-        data : pd.DataFrame
-            DataFrame a guardar.
-        path : str
-            Ruta del archivo CSV donde se guardará el DataFrame.
-        """
-        data.to_csv(path, index=False)
-
-    @staticmethod
-    def save_csv_pl(data: pl.DataFrame, path: str) -> None:
-        """
-        Guardar un DataFrame en un archivo CSV usando Polars.
-
-        Parameters
-        ----------
-        data : pl.DataFrame
-            DataFrame a guardar.
-        path : str
-            Ruta del archivo CSV donde se guardará el DataFrame.
-        """
-        data.write_csv(path)
-
-    @staticmethod
-    def save_parquet_pd(data: pd.DataFrame, path: str) -> None:
-        """
-        Guardar un DataFrame en un archivo Parquet usando Pandas.
-
-        Parameters
-        ----------
-        data : pd.DataFrame
-            DataFrame a guardar.
-        path : str
-            Ruta del archivo Parquet donde se guardará el DataFrame.
-        """
-        data.to_parquet(path)
-
-    @staticmethod
-    def save_parquet_pl(data: pl.DataFrame, path: str) -> None:
-        """
-        Guardar un DataFrame en un archivo Parquet usando Polars.
-
-        Parameters
-        ----------
-        data : pl.DataFrame
-            DataFrame a guardar.
-        path : str
-            Ruta del archivo Parquet donde se guardará el DataFrame.
-        """
-        data.write_parquet(path)
-
-    @staticmethod
-    def load_pickle(file_path: str) -> object:
-        """
-        Carga un objeto desde un archivo pickle.
-
-        Parameters
-        ----------
-        file_path : str
-            Ruta del archivo pickle.
-
-        Returns
-        -------
-        object
-            Objeto cargado desde el archivo pickle.
-        """
-        with open(file_path, 'rb') as file:
-            data = pickle.load(file)
-        return data
-
-    @staticmethod
-    def save_pickle(data: object, file_path: str) -> None:
-        """
-        Guarda un objeto en un archivo pickle.
-
-        Parameters
-        ----------
-        data : object
-            Objeto a guardar.
-        file_path : str
-            Ruta del archivo pickle donde se guardará el objeto.
-
-        Returns
-        -------
-        None
-        """
-        with open(file_path, 'wb') as file:
-            pickle.dump(data, file)
 
     @staticmethod
     def load_data_raw_from_s3(filepath: str) -> Tuple:
@@ -427,4 +259,3 @@ class Utils:
         s3_client.put_object(Bucket=bucket_name, Key=key, Body=buffer.getvalue())
 
         Utils.setup_logging().info("Datos guardados correctamente en S3.\n")
-

@@ -107,3 +107,33 @@ class PipelineOrchestration:
         Utils.save_parquet_to_s3(data_trx_feature_pd, parameters['parameters_catalog']['data_trx_feature_path'])
 
         logger.info('Fin Pipeline Feature Engineering')
+
+
+    # 5. Pipeline Detección de Anomalías
+    @staticmethod
+    def run_pipeline_anomaly_detection():
+        logger.info('Inicio Pipeline Detección de Anomalías\n')
+
+        from .pipelines.anomalias import PipelineAnomalias
+
+        # 5.1 Carga de datos feature
+        data_trx_feature_pd = Utils.load_parquet_from_s3(parameters['parameters_catalog']['data_trx_feature_path'])
+
+        # 5.2 Preparar datos para detección de anomalías
+        data_filter_anomalia_pd = PipelineAnomalias.df_filter_pd(data_trx_feature_pd, parameters['parameters_anomalias'])
+        data_anomalia_scaled_pd = PipelineAnomalias.min_max_scaler_pd(data_filter_anomalia_pd[1])
+
+        # 5.3 Calcular el score Z 
+        data_score_z_pd = PipelineAnomalias.calculate_z_scores_pd(data_filter_anomalia_pd[0], data_anomalia_scaled_pd, parameters['parameters_anomalias'])
+
+        # 5.4 Detectar anomalías
+        df_con_anomalias_pd = PipelineAnomalias.detectar_anomalias_pd(data_score_z_pd, parameters['parameters_anomalias'])
+
+        # 5.5 Resumen de anomalías
+        transacciones_marcadas_pd, resumen_anomalias = PipelineAnomalias.procesar_anomalias_pd(df_con_anomalias_pd, parameters['parameters_anomalias'])
+
+        # 5.6 Guardar datos con anomalías en formato parquet en s3
+        Utils.save_parquet_to_s3(transacciones_marcadas_pd, parameters['parameters_catalog']['data_info_anomaly_trx'])
+        Utils.save_parquet_to_s3(resumen_anomalias, parameters['parameters_catalog']['sumary_anomaly_trx'])
+
+        logger.info('Fin Pipeline Detección de Anomalías')

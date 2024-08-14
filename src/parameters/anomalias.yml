@@ -1,0 +1,29 @@
+## Anomalias parameters
+
+# df_filter_pd
+cols_filter:
+ - CUENTA
+ - MONTO
+ - DIAS_ENTRE_TRX
+ - VARIACION_MONTO_MES_ANIO
+ - PAIS_ORIGEN_DESTINO_TRX
+ - MES_ANIO
+ - ACUM_MONTO_MES_ANIO
+
+ # calculate_z_scores_pd
+groupby_cols:
+ - CUENTA
+ - MES_ANIO
+
+min_group_size: 3
+
+
+# anomalias_df_pd
+contamination_values: # Lista de valores de contaminación a probar
+ - 0.075
+ - 0.1
+ - 0.125  
+
+
+# trx_anomalas_pd
+contamination_value: 0.1

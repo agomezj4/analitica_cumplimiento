@@ -20,3 +20,7 @@ data_trx_primary_path: s3://analitica-cumplimiento--use1-az4--x-s3/data/03_prima
 # Data feature path
 data_customers_feature_path: s3://analitica-cumplimiento--use1-az4--x-s3/data/04_feature/data_customers_feature.parquet
 data_trx_feature_path: s3://analitica-cumplimiento--use1-az4--x-s3/data/04_feature/data_trx_feature.parquet
+
+# Data anomaly path
+data_info_anomaly_trx: s3://analitica-cumplimiento--use1-az4--x-s3/data/05_anomaly/data_info_anomaly_trx.parquet
+sumary_anomaly_trx: s3://analitica-cumplimiento--use1-az4--x-s3/data/05_anomaly/sumary_anomaly_trx.parquet
