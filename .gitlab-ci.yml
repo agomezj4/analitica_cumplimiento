@@ -136,7 +136,7 @@ deploy_staging:
     - conda activate analitica_cumplimiento  
     - ./deploy.sh staging
   rules:
-    - if: '$CI_COMMIT_BRANCH == "deploy_staging"'
+    - if: '$CI_PIPELINE_TARGET == "deploy_staging"'
 
 deploy_production:
   image: continuumio/miniconda3  # Usar una imagen que soporte conda
@@ -147,5 +147,5 @@ deploy_production:
     - conda activate analitica_cumplimiento 
     - ./deploy.sh production
   rules:
-    - if: '$CI_COMMIT_BRANCH == "deploy_production"'
+    - if: '$CI_PIPELINE_TARGET == "deploy_production"'
 
