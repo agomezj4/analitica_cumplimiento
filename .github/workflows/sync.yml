@@ -11,6 +11,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
 
       - name: Setup SSH
         uses: webfactory/ssh-agent@v0.5.3
@@ -22,6 +24,5 @@ jobs:
 
       - name: Sync to GitLab
         run: |
-          git@gitlab.com:personal-proyects4721617/analitica_cumplimiento.git
-          git fetch --unshallow
+          git remote add gitlab git@gitlab.com:personal-proyects4721617/analitica_cumplimiento.git
           git push gitlab ${{ github.ref_name }} --force
