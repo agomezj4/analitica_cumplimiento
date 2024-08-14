@@ -321,16 +321,17 @@ class PipelineSeriesTiempo:
         plt.figure(figsize=(14, 7))
         ax = plt.gca()
         
-        # Asegurarse de que los datos sean arrays unidimensionales
-        index_array = np.array(df_cuenta.index)
-        diferencias_trx_array = np.array(df_cuenta['DIFERENCIA_TRX']).flatten()
-        predictions_array = np.array(predictions).flatten()
-        ci_lower_array = np.array(ci_lower).flatten()
-        ci_upper_array = np.array(ci_upper).flatten()
+        # Convertir todos los datos a arrays de numpy
+        index_array = df_cuenta.index.to_numpy()
+        diferencias_trx_array = df_cuenta['DIFERENCIA_TRX'].to_numpy()
+        prediction_dates_array = prediction_dates.to_numpy()
+        predictions_array = predictions.to_numpy()
+        ci_lower_array = ci_lower.to_numpy()
+        ci_upper_array = ci_upper.to_numpy()
 
         ax.plot(index_array, diferencias_trx_array, label='Datos Históricos', color='#2980B9')
-        ax.plot(prediction_dates, predictions_array, label='Pronóstico hasta 2034', linestyle='--', color='#2ECC71')
-        ax.fill_between(prediction_dates, ci_lower_array, ci_upper_array, color='#2ECC71', alpha=0.2)
+        ax.plot(prediction_dates_array, predictions_array, label='Pronóstico hasta 2034', linestyle='--', color='#2ECC71')
+        ax.fill_between(prediction_dates_array, ci_lower_array, ci_upper_array, color='#2ECC71', alpha=0.2)
         ax.axvline(x=index_array[-1], color='red', linestyle=':', label='Inicio del Pronóstico')
 
         ax.set_title('Pronóstico de la Diferencia de Transacciones hasta 2034 para "CUENTA"', fontsize=14, fontweight='bold')
