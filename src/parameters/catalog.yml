@@ -22,5 +22,10 @@ data_customers_feature_path: s3://analitica-cumplimiento--use1-az4--x-s3/data/04
 data_trx_feature_path: s3://analitica-cumplimiento--use1-az4--x-s3/data/04_feature/data_trx_feature.parquet
 
 # Data anomaly path
-data_info_anomaly_trx: s3://analitica-cumplimiento--use1-az4--x-s3/data/05_anomaly/data_info_anomaly_trx.parquet
-sumary_anomaly_trx: s3://analitica-cumplimiento--use1-az4--x-s3/data/05_anomaly/sumary_anomaly_trx.parquet
+data_info_anomaly_trx_path: s3://analitica-cumplimiento--use1-az4--x-s3/data/05_anomaly/data_info_anomaly_trx.parquet
+sumary_anomaly_trx_path: s3://analitica-cumplimiento--use1-az4--x-s3/data/05_anomaly/sumary_anomaly_trx.parquet
+
+# Data time series path
+plot_decomposition_path: s3://analitica-cumplimiento--use1-az4--x-s3/data/06_time_series/plot_decomposition.png
+plot_seasonal_component_path: s3://analitica-cumplimiento--use1-az4--x-s3/data/06_time_series/plot_seasonal_component.png
+plot_forecast_path: s3://analitica-cumplimiento--use1-az4--x-s3/data/06_time_series/plot_forecast.png

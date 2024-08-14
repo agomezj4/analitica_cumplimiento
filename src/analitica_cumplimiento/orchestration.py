@@ -133,7 +133,31 @@ class PipelineOrchestration:
         transacciones_marcadas_pd, resumen_anomalias = PipelineAnomalias.procesar_anomalias_pd(df_con_anomalias_pd, parameters['parameters_anomalias'])
 
         # 5.6 Guardar datos con anomalías en formato parquet en s3
-        Utils.save_parquet_to_s3(transacciones_marcadas_pd, parameters['parameters_catalog']['data_info_anomaly_trx'])
-        Utils.save_parquet_to_s3(resumen_anomalias, parameters['parameters_catalog']['sumary_anomaly_trx'])
+        Utils.save_parquet_to_s3(transacciones_marcadas_pd, parameters['parameters_catalog']['data_info_anomaly_trx_path'])
+        Utils.save_parquet_to_s3(resumen_anomalias, parameters['parameters_catalog']['sumary3_anomaly_trx_path'])
 
         logger.info('Fin Pipeline Detección de Anomalías')
+
+
+    # 6. Pipeline de Series Temporales
+    @staticmethod
+    def run_pipeline_time_series():
+        logger.info('Inicio Pipeline de Series Temporales\n')
+
+        from .pipelines.series_tiempo import PipelineSeriesTiempo
+
+        # 6.1 Carga de datos feature
+        data_customers_feature_pd = Utils.load_parquet_from_s3(parameters['parameters_catalog']['data_customers_feature_path'])
+
+        # 6.2 Tratar outliers
+        treat_outliers_pd = PipelineSeriesTiempo.treat_outliers_pd(data_customers_feature_pd)
+
+        # 6.3 Análisis series temporales
+        fig_decomposition, fig_seasonal, fig_forecast = PipelineSeriesTiempo.generate_analysis(treat_outliers_pd)
+
+        # 6.4 Guardar figuras en formato png en s3
+        Utils.save_image_to_s3(fig_decomposition, parameters['parameters_catalog']['plot_decomposition_path'])
+        Utils.save_image_to_s3(fig_seasonal, parameters['parameters_catalog']['plot_seasonal_component_path'])
+        Utils.save_image_to_s3(fig_forecast, parameters['parameters_catalog']['plot_forecast_path'])
+
+        logger.info('Fin Pipeline de Series Temporales')

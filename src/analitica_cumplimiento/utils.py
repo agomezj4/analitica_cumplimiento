@@ -9,7 +9,8 @@ import boto3
 import re
 import pyarrow.parquet as pq
 import io
-
+from PIL import Image
+import matplotlib.pyplot as plt
 
 
 class Utils:
@@ -259,3 +260,43 @@ class Utils:
         s3_client.put_object(Bucket=bucket_name, Key=key, Body=buffer.getvalue())
 
         Utils.setup_logging().info("Datos guardados correctamente en S3.\n")
+
+    @staticmethod
+    def save_image_to_s3(fig: plt.Figure, filepath: str) -> None:
+        """
+        Guardar una imagen en formato JPG en S3.
+
+        Parameters
+        ----------
+        fig : matplotlib.figure.Figure
+            Figura de Matplotlib que se desea guardar.
+        filepath : str
+            Ruta del archivo en S3, en formato 's3://bucket_name/path/to/file.jpg'.
+
+        Returns
+        -------
+        None
+        """
+
+        Utils.setup_logging().info("Guardando imagen en S3...")
+
+        # Configurar cliente S3
+        s3_client = boto3.client('s3')
+        bucket_name = filepath.split('/')[2]
+        key = '/'.join(filepath.split('/')[3:])
+        
+        # Convertir la figura de Matplotlib a un objeto PIL Image
+        buffer = io.BytesIO()
+        fig.savefig(buffer, format="JPEG")
+        buffer.seek(0)
+        image = Image.open(buffer)
+        
+        # Guardar la imagen en un nuevo buffer en formato JPEG
+        new_buffer = io.BytesIO()
+        image.save(new_buffer, format="JPEG")
+        new_buffer.seek(0)
+        
+        # Subir la imagen JPG a S3
+        s3_client.put_object(Bucket=bucket_name, Key=key, Body=new_buffer.getvalue(), ContentType='image/jpeg')
+
+        Utils.setup_logging().info("Imagen guardada correctamente en S3.\n")

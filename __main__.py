@@ -14,6 +14,7 @@ def main():
             PipelineOrchestration.run_pipeline_primary()
             PipelineOrchestration.run_pipeline_feature_engineering()
             PipelineOrchestration.run_pipeline_anomaly_detection()
+            PipelineOrchestration.run_pipeline_time_series()
 
         elif pipeline == 'Pipeline Raw':
             PipelineOrchestration.run_pipeline_raw()
@@ -29,6 +30,9 @@ def main():
 
         elif pipeline == 'Pipeline Anomaly Detection':
             PipelineOrchestration.run_pipeline_anomaly_detection()
+
+        elif pipeline == 'Pipeline Time Series':
+            PipelineOrchestration.run_pipeline_time_series()
 
         else:
             print(f"Pipeline '{pipeline}' no reconocido.")
