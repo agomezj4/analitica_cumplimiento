@@ -1,6 +1,7 @@
 # analitica_cumplimiento
 Análisis de series temporales e identificación de anomalías en transacciones bancarias de clientes con diferentes productos.
 
+
 # Metadata del Proyecto
 
 ## Fuentes de Datos Originales
@@ -11,19 +12,11 @@ El proyecto utiliza tres fuentes de datos principales:
 2. **PRODUCTOS**: Base de datos de productos de los clientes
 3. **TRANSACCIONES**: Contiene las transacciones de los clientes, identificando el producto, la fecha, el monto y el país de origen o destino de la transacción. La codificación de los países está en ISO 3166-1, en algunos casos utilizando el código alfanumérico y en otros el numérico.
 
-## Procesamiento de Datos
-
-Se realizaron las siguientes operaciones de procesamiento:
-
-1. Unión de las bases de datos de CLIENTES y PRODUCTOS.
-2. Procesamiento de la base de datos de TRANSACCIONES.
-3. Creación de nuevas variables derivadas.
-
-## Datasets Resultantes
+## Datasets Procesados
 
 ### 1. data_trx_feature_pd
 
-Dataset de transacciones con características adicionales.
+Dataset de transacciones realizadas por los clientes con sus productos.
 
 | # | Columna | Tipo de Dato |
 |---|---------|--------------|
@@ -41,27 +34,25 @@ Dataset de transacciones con características adicionales.
 
 ### 2. data_customers_feature_pd
 
-Dataset de clientes con características adicionales.
+Dataset de clientes y sus productos.
 
-| # | Columna | Tipo de Dato | No Nulos |
-|---|---------|--------------|----------|
-| 0 | CODIGO | object | 49321 |
-| 1 | TIPO_CLIENTE | object | 49321 |
-| 2 | FECHA_ACTUALIZACION | datetime64[ns] | 49321 |
-| 3 | PEP | int64 | 49321 |
-| 4 | RIESGO | int64 | 49321 |
-| 5 | PAIS | object | 49321 |
-| 6 | CUENTA | object | 49321 |
-| 7 | TIPO_CUENTA | object | 49321 |
-| 8 | ESTADO_CUENTA | object | 49321 |
-| 9 | MONTO_TRX_RECIBIDA | float64 | 49321 |
-| 10 | FRECUENCIA_TRX_RECIBIDA | int64 | 49321 |
-| 11 | MONTO_TRX_ENVIADA | float64 | 49321 |
-| 12 | FRECUENCIA_TRX_ENVIADA | int64 | 49321 |
-| 13 | TIEMPO_ESTADO_CUENTA | int64 | 49321 |
-| 14 | RATIO_TRX_ENVIADAS_RECIBIDAS | float64 | 49321 |
-| 15 | MONTO_PROM_TRX_RECIBIDA | float64 | 49321 |
-| 16 | MONTO_PROM_TRX_ENVIADA | float64 | 49321 |
-| 17 | CANT_PROD | int64 | 49321 |
-
-Tipos de datos: datetime64[ns](1), float64(5), int64(6), object(6)
+| # | Columna | Tipo de Dato |
+|---|---------|--------------|
+| 0 | CODIGO | object |
+| 1 | TIPO_CLIENTE | object |
+| 2 | FECHA_ACTUALIZACION | datetime64[ns] |
+| 3 | PEP | int64 |
+| 4 | RIESGO | int64 |
+| 5 | PAIS | object |
+| 6 | CUENTA | object |
+| 7 | TIPO_CUENTA | object |
+| 8 | ESTADO_CUENTA | object |
+| 9 | MONTO_TRX_RECIBIDA | float64 |
+| 10 | FRECUENCIA_TRX_RECIBIDA | int64 |
+| 11 | MONTO_TRX_ENVIADA | float64 |
+| 12 | FRECUENCIA_TRX_ENVIADA | int64 |
+| 13 | TIEMPO_ESTADO_CUENTA | int64 |
+| 14 | RATIO_TRX_ENVIADAS_RECIBIDAS | float64 |
+| 15 | MONTO_PROM_TRX_RECIBIDA | float64 |
+| 16 | MONTO_PROM_TRX_ENVIADA | float64 |
+| 17 | CANT_PROD | int64 |
