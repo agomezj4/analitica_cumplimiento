@@ -42,6 +42,7 @@ stages:
   - *common_setup
   - pip install numpy==1.26.0
   - pip install statsmodels==0.14.2
+  - pip install scikit-learn==1.5.0
 
 ## Ejecución de los stages
 raw_pipeline:
