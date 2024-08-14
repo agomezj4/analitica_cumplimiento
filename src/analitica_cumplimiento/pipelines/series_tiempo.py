@@ -322,15 +322,16 @@ class PipelineSeriesTiempo:
         ax = plt.gca()
         
         # Asegurarse de que los datos sean arrays unidimensionales
+        index_array = np.array(df_cuenta.index)
         diferencias_trx_array = np.array(df_cuenta['DIFERENCIA_TRX']).flatten()
         predictions_array = np.array(predictions).flatten()
         ci_lower_array = np.array(ci_lower).flatten()
         ci_upper_array = np.array(ci_upper).flatten()
 
-        ax.plot(df_cuenta.index, diferencias_trx_array, label='Datos Históricos', color='#2980B9')
+        ax.plot(index_array, diferencias_trx_array, label='Datos Históricos', color='#2980B9')
         ax.plot(prediction_dates, predictions_array, label='Pronóstico hasta 2034', linestyle='--', color='#2ECC71')
         ax.fill_between(prediction_dates, ci_lower_array, ci_upper_array, color='#2ECC71', alpha=0.2)
-        ax.axvline(x=df_cuenta.index[-1], color='red', linestyle=':', label='Inicio del Pronóstico')
+        ax.axvline(x=index_array[-1], color='red', linestyle=':', label='Inicio del Pronóstico')
 
         ax.set_title('Pronóstico de la Diferencia de Transacciones hasta 2034 para "CUENTA"', fontsize=14, fontweight='bold')
         ax.set_xlabel('Fecha', fontsize=12)
